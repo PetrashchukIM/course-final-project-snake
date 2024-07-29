@@ -1,0 +1,6 @@
+{
+  "devDependencies": {
+    "@typescript-eslint/parser": "^7.17.0",
+    "prettier": "^3.3.3"
+  }
+}
