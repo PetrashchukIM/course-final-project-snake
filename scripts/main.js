@@ -22,6 +22,12 @@ var direction = "right";
 var gameInterval;
 var gameSpeedDelay = 200;
 var gameStarted = false;
+function draw() {
+    board.innerHTML = '';
+    drawSnake();
+    drawFood();
+    updateScore();
+}
 function startGame() {
     gameStarted = true;
     instructionText.style.display = "none";
@@ -52,6 +58,13 @@ function generateFood() {
     var x = Math.floor(Math.random() * gridSize) + 1;
     var y = Math.floor(Math.random() * gridSize) + 1;
     return { x: x, y: y };
+}
+function drawFood() {
+    if (gameStarted) {
+        var foodElement = createGameElement('div', 'food');
+        setPosition(foodElement, food);
+        board.appendChild(foodElement);
+    }
 }
 function move() {
     var head = __assign({}, snake[0]);
@@ -93,3 +106,51 @@ function handleKeyPress(event) {
     }
 }
 document.addEventListener("keydown", handleKeyPress);
+function checkCollision() {
+    var head = snake[0];
+    if (head.x < 1 || head.x > gridSize || head.y < 1 || head.y > gridSize) {
+        resetGame();
+    }
+    for (var i = 1; i < snake.length; i++) {
+        if (head.x === snake[i].x && head.y === snake[i].y) {
+            resetGame();
+        }
+    }
+}
+function resetGame() {
+    updateHighScore();
+    stopGame();
+    snake = [{ x: 10, y: 10 }];
+    food = generateFood();
+    direction = 'right';
+    gameSpeedDelay = 200;
+    updateScore();
+}
+function updateScore() {
+    var currentScore = snake.length - 1;
+    var padCurrentScore = pad(currentScore, 4);
+    score.textContent = padCurrentScore;
+}
+function pad(num, size) {
+    var s = num + "";
+    while (s.length < size)
+        s = "0" + s;
+    return s;
+}
+function stopGame() {
+    if (gameInterval !== undefined) {
+        clearInterval(gameInterval);
+    }
+    gameStarted = false;
+    instructionText.style.display = 'block';
+    logo.style.display = 'block';
+}
+function updateHighScore() {
+    var currentScore = snake.length - 1;
+    if (currentScore > highScore) {
+        highScore = currentScore;
+        var padCurrentScore = pad(currentScore, 4);
+        highScoreText.textContent = padCurrentScore;
+    }
+    highScoreText.style.display = 'block';
+}
