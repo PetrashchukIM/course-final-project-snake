@@ -14,13 +14,13 @@ var instructionText = document.getElementById("instruction-text");
 var logo = document.getElementById("logo");
 var score = document.getElementById("score");
 var highScoreText = document.getElementById("highScore");
-var gridSize = 20;
+var gridSize = 50;
 var snake = [{ x: 10, y: 10 }];
 var food = generateFood();
 var highScore = 0;
 var direction = "right";
 var gameInterval;
-var gameSpeedDelay = 200;
+var gameSpeedDelay = 150;
 var gameStarted = false;
 function draw() {
     if (board) {
@@ -98,20 +98,20 @@ function move() {
             head.x++;
             break;
     }
-}
-snake.unshift(head);
-if (head.x === food.x && head.y === food.y) {
-    food = generateFood();
-    increaseSpeed();
-    clearInterval(gameInterval); // Clear past interval
-    gameInterval = setInterval(function () {
-        move();
-        checkCollision();
-        draw();
-    }, gameSpeedDelay);
-}
-else {
-    snake.pop();
+    snake.unshift(head);
+    if (head.x === food.x && head.y === food.y) {
+        food = generateFood();
+        increaseSpeed();
+        clearInterval(gameInterval); // Clear past interval
+        gameInterval = setInterval(function () {
+            move();
+            checkCollision();
+            draw();
+        }, gameSpeedDelay);
+    }
+    else {
+        snake.pop();
+    }
 }
 function handleKeyPress(event) {
     if ((!gameStarted && event.code === "Space") ||

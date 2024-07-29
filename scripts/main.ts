@@ -10,13 +10,13 @@ const logo: HTMLElement | null = document.getElementById("logo");
 const score: HTMLElement | null = document.getElementById("score");
 const highScoreText: HTMLElement | null = document.getElementById("highScore");
 
-const gridSize: number = 20;
+const gridSize: number = 50;
 let snake = [{ x: 10, y: 10 }];
 let food: Position = generateFood();
 let highScore: number = 0;
 let direction: string = "right";
 let gameInterval: number;
-let gameSpeedDelay: number = 200;
+let gameSpeedDelay: number = 150;
 let gameStarted: boolean = false;
 
 function draw(): void {
@@ -100,22 +100,22 @@ function move(): void {
       head.x++;
       break;
   }
+
+  snake.unshift(head);
+
+  if (head.x === food.x && head.y === food.y) {
+    food = generateFood();
+    increaseSpeed();
+    clearInterval(gameInterval); // Clear past interval
+    gameInterval = setInterval(() => {
+      move();
+      checkCollision();
+      draw();
+    }, gameSpeedDelay);
+  } else {
+    snake.pop();
+  }
 }
-
-// snake.unshift(head);
-
-// if (head.x === food.x && head.y === food.y) {
-//   food = generateFood();
-//   increaseSpeed();
-//   clearInterval(gameInterval); // Clear past interval
-//   gameInterval = setInterval(() => {
-//     move();
-//     checkCollision();
-//     draw();
-//   }, gameSpeedDelay);
-// } else {
-//   snake.pop();
-// }
 
 function handleKeyPress(event: KeyboardEvent): void {
   if (
