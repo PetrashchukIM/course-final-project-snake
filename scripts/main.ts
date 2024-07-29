@@ -20,10 +20,12 @@ let gameSpeedDelay: number = 200;
 let gameStarted: boolean = false;
 
 function draw(): void {
-  board.innerHTML = "";
-  drawSnake();
-  drawFood();
-  updateScore();
+  if (board) {
+    board.innerHTML = "";
+    drawSnake();
+    drawFood();
+    updateScore();
+  }
 }
 
 function startGame(): void {
@@ -43,6 +45,18 @@ function drawSnake(): void {
     setPosition(snakeElement, segment);
     board.appendChild(snakeElement);
   });
+}
+
+function increaseSpeed(): void {
+  if (gameSpeedDelay > 150) {
+    gameSpeedDelay -= 5;
+  } else if (gameSpeedDelay > 100) {
+    gameSpeedDelay -= 3;
+  } else if (gameSpeedDelay > 50) {
+    gameSpeedDelay -= 2;
+  } else if (gameSpeedDelay > 25) {
+    gameSpeedDelay -= 1;
+  }
 }
 
 function createGameElement(tag: string, className: string): HTMLElement {
@@ -87,6 +101,21 @@ function move(): void {
       break;
   }
 }
+
+// snake.unshift(head);
+
+// if (head.x === food.x && head.y === food.y) {
+//   food = generateFood();
+//   increaseSpeed();
+//   clearInterval(gameInterval); // Clear past interval
+//   gameInterval = setInterval(() => {
+//     move();
+//     checkCollision();
+//     draw();
+//   }, gameSpeedDelay);
+// } else {
+//   snake.pop();
+// }
 
 function handleKeyPress(event: KeyboardEvent): void {
   if (

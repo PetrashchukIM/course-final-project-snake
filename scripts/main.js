@@ -23,10 +23,12 @@ var gameInterval;
 var gameSpeedDelay = 200;
 var gameStarted = false;
 function draw() {
-    board.innerHTML = '';
-    drawSnake();
-    drawFood();
-    updateScore();
+    if (board) {
+        board.innerHTML = "";
+        drawSnake();
+        drawFood();
+        updateScore();
+    }
 }
 function startGame() {
     gameStarted = true;
@@ -45,6 +47,20 @@ function drawSnake() {
         board.appendChild(snakeElement);
     });
 }
+function increaseSpeed() {
+    if (gameSpeedDelay > 150) {
+        gameSpeedDelay -= 5;
+    }
+    else if (gameSpeedDelay > 100) {
+        gameSpeedDelay -= 3;
+    }
+    else if (gameSpeedDelay > 50) {
+        gameSpeedDelay -= 2;
+    }
+    else if (gameSpeedDelay > 25) {
+        gameSpeedDelay -= 1;
+    }
+}
 function createGameElement(tag, className) {
     var element = document.createElement(tag);
     element.className = className;
@@ -61,7 +77,7 @@ function generateFood() {
 }
 function drawFood() {
     if (gameStarted) {
-        var foodElement = createGameElement('div', 'food');
+        var foodElement = createGameElement("div", "food");
         setPosition(foodElement, food);
         board.appendChild(foodElement);
     }
@@ -82,6 +98,20 @@ function move() {
             head.x++;
             break;
     }
+}
+snake.unshift(head);
+if (head.x === food.x && head.y === food.y) {
+    food = generateFood();
+    increaseSpeed();
+    clearInterval(gameInterval); // Clear past interval
+    gameInterval = setInterval(function () {
+        move();
+        checkCollision();
+        draw();
+    }, gameSpeedDelay);
+}
+else {
+    snake.pop();
 }
 function handleKeyPress(event) {
     if ((!gameStarted && event.code === "Space") ||
@@ -122,7 +152,7 @@ function resetGame() {
     stopGame();
     snake = [{ x: 10, y: 10 }];
     food = generateFood();
-    direction = 'right';
+    direction = "right";
     gameSpeedDelay = 200;
     updateScore();
 }
@@ -142,8 +172,8 @@ function stopGame() {
         clearInterval(gameInterval);
     }
     gameStarted = false;
-    instructionText.style.display = 'block';
-    logo.style.display = 'block';
+    instructionText.style.display = "block";
+    logo.style.display = "block";
 }
 function updateHighScore() {
     var currentScore = snake.length - 1;
@@ -152,5 +182,5 @@ function updateHighScore() {
         var padCurrentScore = pad(currentScore, 4);
         highScoreText.textContent = padCurrentScore;
     }
-    highScoreText.style.display = 'block';
+    highScoreText.style.display = "block";
 }
