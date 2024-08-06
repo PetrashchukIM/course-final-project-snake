@@ -28,24 +28,7 @@ function draw(): void {
   }
 }
 
-function startGame(): void {
-  gameStarted = true;
-  instructionText.style.display = "none";
-  logo.style.display = "none";
-  gameInterval = setInterval(() => {
-    move();
-    checkCollision();
-    draw();
-  }, gameSpeedDelay);
-}
 
-function drawSnake(): void {
-  snake.forEach((segment) => {
-    const snakeElement: HTMLElement = createGameElement("div", "snake");
-    setPosition(snakeElement, segment);
-    board.appendChild(snakeElement);
-  });
-}
 
 function increaseSpeed(): void {
   if (gameSpeedDelay > 150) {
